@@ -1,0 +1,105 @@
+﻿@using WebApp.Models.ViewModels
+@model SearchVM
+
+@{
+    ViewData["Title"] = "Index";
+    var skillSetList = ViewBag.SkillSets;
+    var projectTypes = ViewBag.ProjectTypes;
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Projects.FirstOrDefault().Idproject)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Projects.FirstOrDefault().Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Projects.FirstOrDefault().Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Projects.FirstOrDefault().StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Projects.FirstOrDefault().EndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Projects.FirstOrDefault().ProjectTypeName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Projects.FirstOrDefault().SkillSets)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Projects)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Idproject)
+                </td>
+                <td>
+                    @Html.ActionLink(item.Title, "AdminDetails", new { id = item.Idproject }, new { @class = "" })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProjectTypeName)
+                </td>
+                <td>
+                    @foreach (var skillSet in item.SkillSets)
+                    {
+                        <div class="badge bg-primary">
+                            @Html.DisplayFor(modelItem => (skillSetList as List<SkillSetVM>).Find(x => x.IdskillSet == skillSet).Name)
+                        </div>
+                        <br />
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Idproject }, new { @class = "btn btn-outline-primary" })
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Idproject }, new { @class = "btn btn-outline-danger" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<nav>
+    <ul class="pagination">
+        @for (int i = Model.FromPager; i <= Model.ToPager; i++)
+        {
+            var linkText = @i.ToString();
+            if (i != 1 && i == Model.FromPager)
+            {
+                linkText = "«";
+            }
+            else if (i != Model.LastPage && i == Model.ToPager)
+            {
+                linkText = "»";
+            }
+
+            var linkClass = "page-item";
+            if (i == Model.Page)
+            {
+                linkClass = "page-item active";
+            }
+            <li class="@linkClass">
+                <a asp-action="AdminSearch"
+                   asp-route-q="@Model.Q"
+                   asp-route-orderBy="@Model.OrderBy"
+                   asp-route-page="@i"
+                   asp-route-size="@Model.Size"
+                   class="page-link">@linkText</a>
+            </li>
+        }
+    </ul>
+</nav>

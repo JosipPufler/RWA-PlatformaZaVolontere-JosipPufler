@@ -1,0 +1,14 @@
+﻿@using WebApp.Models.ViewModels
+@model ProjectVM
+@{
+    Layout = "_UserLayout";
+}
+
+<h1>You have succesfully joined the project: @Model.Title</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <a asp-area="" asp-controller="Project" asp-action="Search" class="btn btn-primary">Ok</a>
+    </div>
+</div>

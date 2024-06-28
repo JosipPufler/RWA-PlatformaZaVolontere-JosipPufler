@@ -1,0 +1,125 @@
+﻿@model WebApp.Models.ViewModels.UserVM
+
+@{
+    ViewData["Title"] = "Profile";
+    var returnUrl = ViewBag.returnUrl;
+}
+
+<h1>Profile</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form id="form">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="UserSkillSets" class="control-label"></label>
+                <select asp-for="UserSkillSets" asp-items="ViewBag.SkillSetSelect" class="form-select" multiple="multiple"></select>
+                <span asp-validation-for="UserSkillSets" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="button" value="Save" id="save" class="btn btn-primary" />
+                <a href=@returnUrl class="btn btn-danger">Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        const modelId = "@Model.Iduser";
+        function GetProfileData(){
+            $.ajax({
+                url: `/User/GetProfileData/${modelId}`,
+                method: "GET"
+            })
+                .done((data) => {
+                    $("#Username").val(data.username);
+                    $("#FirstName").val(data.firstName);
+                    $("#LastName").val(data.lastName);
+                    $("#Email").val(data.email);
+                    $("#PhoneNumber").val(data.phoneNumber);
+                    $("#UserSkillSets").prop("selected", function () {
+                        return ~$.inArray(this.val(), data.userSkillSets);
+                    });
+                });
+        }
+
+        $("#save").click(() => {
+            $('#form').validate();
+            console.log($('#UserSkillSets').val())
+            if ($('#form').valid()) {
+                const profile = {
+                    username: $("#Username").val(),
+                    firstName: $("#FirstName").val(),
+                    lastName: $("#LastName").val(),
+                    email: $("#Email").val(),
+                    phoneNumber: $("#PhoneNumber").val(),
+                    userSkillSets: $("#UserSkillSets").val(),
+
+                };
+
+                $.ajax({
+                    url: `/User/SetProfileData/${modelId}`,
+                    method: "PUT",
+                    contentType: "application/json",
+                    data: JSON.stringify(profile)
+                })
+                    .done((data) => {
+                        //Za provjeru da li pravilno snimljeno
+                        GetProfileData();
+                    })
+                    .fail(() => {
+                        alert("ERROR: Could not update profile");
+                    })
+            }
+        })
+        /*
+        $("#ajaxEdit").click((e) => {
+            e.preventDefault();
+
+            const username = $("#Username").text().trim();
+            const firstName = $("#FirstName").text().trim();
+            const lastName = $("#LastName").text().trim();
+            const email = $("#Email").text().trim();
+            const phone = $("#Phone").text().trim();
+
+            $("#Username").val(username);
+            $("#FirstNameInput").val(firstName);
+            $("#LastNameInput").val(lastName);
+            $("#EmailInput").val(email);
+            $("#PhoneInput").val(phone);
+        });
+        */
+
+    </script>
+}

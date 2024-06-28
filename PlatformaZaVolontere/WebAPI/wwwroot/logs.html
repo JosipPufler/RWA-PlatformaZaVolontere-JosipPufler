@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <main role="main" class="pb-3">
+            <div class="row">
+                <button class="btn btn-primary" onclick="ShowLogs()">Show logs</button>
+                <button class="btn btn-primary" onclick="LogOut()">Log out</button>
+                <select class="form-select" id="logCount" name="logCount">
+                    <option value=10 selected="selected">10</option>
+                    <option value=25>25</option>
+                    <option value=50>50</option>
+                </select>
+            </div>
+
+
+            <table id="table" class="table table-bordered table-striped" align="center" border="1">
+                <tr>
+                    <th>ID</th>
+                    <th>Timestamp</th>
+                    <th>Level</th>
+                    <th>Message</th>
+                </tr>
+            </table>
+        </main>
+    </div>
+
+
+
+
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+    <script>
+
+
+        function LogOut() {
+            localStorage.removeItem("JWT");
+            window.location.href = "login.html"
+        }
+
+        function ShowLogs() {
+            let logUrl = "http://localhost:5274/api/logs/get/" + $("#logCount").find(":selected").val();
+            $.ajax({
+                method: "GET",
+                url: logUrl,
+                contentType: 'application/json'
+            }).done(function (data) {
+                console.log(data);
+                var table = document.getElementById("table");
+                table.innerHTML =
+                    `<tr>
+                        <th>ID</th>
+                        <th>Timestamp</th>
+                        <th>Level</th>
+                        <th>Message</th>
+                    </tr>`;
+                data.forEach(function (object, f) {
+                    var tr = document.createElement("tr");
+                    tr.innerHTML =
+                        "<td>" + object.idlog + "</td>" +
+                        "<td>" + object.timestamp + "</td>" +
+                        "<td>" + object.level + "</td>" +
+                        "<td>" + object.message + "</td>";
+                    table.appendChild(tr);
+                })
+                /*let cols = [];
+
+                for (let i = 0; i < data.length; i++) {
+                    for (let k in data[i]) {
+                        if (cols.indexOf(k) === -1) {
+
+                            cols.push(k);
+                        }
+                    }
+                }
+
+                let table = document.createElement("table");
+
+                let tr = table.insertRow(-1);
+                tr.className = "table-primary"
+                for (let i = 0; i < cols.length; i++) {
+
+                    let theader = document.createElement("th");
+                    theader.classList = "table-primary";
+                    theader.innerHTML = cols[i];
+
+                    tr.appendChild(theader);
+                }
+
+                for (let i = 0; i < data.length; i++) {
+
+                    trow = table.insertRow(-1);
+                    for (let j = 0; j < cols.length; j++) {
+                        let cell = trow.insertCell(-1);
+                        cell.classList = "table-primary"
+                        cell.innerHTML = data[i][cols[j]];
+                    }
+                }
+
+                let el = document.getElementById("table");
+                el.innerHTML = "";
+                el.appendChild(table);
+
+                */
+            }).fail(function (err) {
+                alert(err.responseText);
+            });
+        }
+    </script>
+</body>
+</html>
