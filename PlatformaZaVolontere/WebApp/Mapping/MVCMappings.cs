@@ -23,6 +23,8 @@ namespace WebApp.Mapping
 
             CreateMap<SkillSetVM, BlSkillSet>();
             CreateMap<BlSkillSet, SkillSetVM>();
+
+            CreateMap<BlProjectUser, ProjectUserVM>().ForMember(dst => dst.ProjectTitle, opt => opt.MapFrom(src => src.Project.Title)).ForMember(dst => dst.ProjectType, opt => opt.MapFrom(src => src.Project.ProjectType.Name)).ForMember(dst => dst.Username, opt => opt.MapFrom(src => src.User.Username));
         }
     }
 }

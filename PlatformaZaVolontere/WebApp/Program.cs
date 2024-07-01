@@ -42,6 +42,7 @@ builder.Services.AddAutoMapper(config => {
     config.AddProfile<BlMappingProfile>();
 });
 builder.Services.AddScoped<ILoggerService, LoggerService>();
+builder.Services.AddScoped<IProjectUserRepo, ProjectUserRepo>();
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<IProjectRepo, ProjectRepo>();
 builder.Services.AddScoped<IRoleRepo, RoleRepo>();

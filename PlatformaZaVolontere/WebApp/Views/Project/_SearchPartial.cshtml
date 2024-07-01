@@ -12,9 +12,6 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Projects.FirstOrDefault().Idproject)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Projects.FirstOrDefault().Title)
             </th>
             <th>
@@ -35,9 +32,6 @@
         @foreach (var item in Model.Projects)
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Idproject)
-                </td>
                 <td>
                     @Html.ActionLink(item.Title, "Details", new { id = item.Idproject }, new { @class = "" })
                 </td>
