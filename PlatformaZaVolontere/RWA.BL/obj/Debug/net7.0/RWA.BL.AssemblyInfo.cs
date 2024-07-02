@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RWA.BL")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2fc4d19a2044e86bf921ae5d0655def3b70f66fa")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fac2c67e2fef179dc9733eb1f4f29837f4cdff1f")]
 [assembly: System.Reflection.AssemblyProductAttribute("RWA.BL")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RWA.BL")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
