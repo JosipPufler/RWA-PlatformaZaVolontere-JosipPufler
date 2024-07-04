@@ -23,7 +23,7 @@ namespace WebApp.Models.ViewModels
         [Required(ErrorMessage = "A start date is required")]
         public DateTime StartDate { get; set; }
 
-        [Display(Name = "End date")]
+        [Display(Name = "End date (leave empty if unknown)")]
         public DateTime? EndDate { get; set; }
 
         [Display(Name = "Skill sets")]
