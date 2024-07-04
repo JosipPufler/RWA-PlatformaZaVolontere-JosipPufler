@@ -9,27 +9,35 @@
 <p>
     <a asp-action="Create" class="btn btn-outline-primary">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.IdskillSet }, new { @class = "btn btn-outline-primary" })
-                    @Html.ActionLink("Delete", "Delete", new { id = item.IdskillSet }, new { @class = "btn btn-outline-danger" })
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+
+<div class="row d-flex justify-content-center">
+    <div class="col-md-4">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style ="max-width: 125px; width: 150px;"></th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                @Html.ActionLink("Edit", "Edit", new { id = item.IdskillSet }, new { @class = "btn btn-outline-primary" })
+                                @Html.ActionLink("Delete", "Delete", new { id = item.IdskillSet }, new { @class = "btn btn-outline-danger" })
+                            </div>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>

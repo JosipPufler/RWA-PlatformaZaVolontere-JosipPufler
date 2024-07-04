@@ -47,8 +47,12 @@ namespace WebApp.Controllers
                 _roleRepo.Add(_mapper.Map<BlRole>(role));
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
+                if (e.InnerException != null && e.InnerException.Message.StartsWith("Violation of UNIQUE KEY constraint "))
+                {
+                    ModelState.AddModelError(nameof(RoleVM.Name), "That role already exists");
+                }
                 return View();
             }
         }
@@ -71,9 +75,13 @@ namespace WebApp.Controllers
                 _roleRepo.Update(_mapper.Map<BlRole>(role));
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                if (e.InnerException != null && e.InnerException.Message.StartsWith("Violation of UNIQUE KEY constraint "))
+                {
+                    ModelState.AddModelError(nameof(RoleVM.Name), "That role already exists");
+                }
+                return View(_mapper.Map<RoleVM>(_roleRepo.Get(id)));
             }
         }
 

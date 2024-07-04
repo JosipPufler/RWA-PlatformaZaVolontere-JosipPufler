@@ -55,34 +55,6 @@ namespace RestApi.Controllers
             }
         }
 
-        // POST api/<UserController>
-        /*[HttpPost]
-        public ActionResult<UserDto> Post([FromBody] UserDto value)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var salt = AuthUtilities.GetSalt();
-                value
-
-
-                _context.Users.Add(newUser);
-                _context.SaveChanges();
-
-                value.Iduser = newUser.Iduser;
-
-                return Ok(value);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }*/
-
         // PUT api/<UserController>/5
         [HttpPut("{id}")]
         public ActionResult<UserDto> Put(int id, [FromBody] UserDto value)
@@ -103,9 +75,13 @@ namespace RestApi.Controllers
 
                 return Ok(value);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest();
+                if (ex.InnerException != null && ex.InnerException.Message.StartsWith(@"The INSERT statement conflicted with the FOREIGN KEY constraint") && ex.InnerException.Message.Contains("FK__ProjectSk__Skill__4BAC3F29"))
+                {
+                    return BadRequest("Invalid skill set id");
+                }
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -125,9 +101,9 @@ namespace RestApi.Controllers
 
                 return Ok(resultDto);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest();
+                return StatusCode(500, ex.Message);
             }
         }
     }

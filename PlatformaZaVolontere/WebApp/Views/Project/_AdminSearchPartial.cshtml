@@ -7,7 +7,7 @@
     var projectTypes = ViewBag.ProjectTypes;
 }
 
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
             <th>
@@ -25,7 +25,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Projects.FirstOrDefault().ProjectTypeName)
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.Projects.FirstOrDefault().SkillSets)
             </th>
             <th></th>
@@ -35,22 +35,31 @@
         @foreach (var item in Model.Projects)
         {
             <tr>
-                <td>
+                <td class="align-content-center">
                     @Html.ActionLink(item.Title, "AdminDetails", new { id = item.Idproject }, new { @class = "" })
                 </td>
-                <td>
+                <td class="align-content-top" style="max-width: 500px; max-height: 150px; overflow: hidden; text-align: justify;">
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
-                <td>
+                <td class="align-content-center">
                     @Html.DisplayFor(modelItem => item.StartDate)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EndDate)
-                </td>
-                <td>
+                @if (!string.IsNullOrEmpty(item.EndDate.ToString()))
+                {
+                    <td class="align-content-center">
+                        @Html.DisplayFor(modelItem => item.EndDate)
+                    </td>
+                }
+                else
+                {
+                    <td class="align-content-center">
+                        N/A
+                    </td>
+                }
+                <td class="align-content-center">
                     @Html.DisplayFor(modelItem => item.ProjectTypeName)
                 </td>
-                <td>
+                <td class="align-content-center text-center">
                     @foreach (var skillSet in item.SkillSets)
                     {
                         <div class="badge bg-primary">
@@ -59,41 +68,49 @@
                         <br />
                     }
                 </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Idproject }, new { @class = "btn btn-outline-primary" })
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Idproject }, new { @class = "btn btn-outline-danger" })
+                <td class="align-content-center text-center">
+                    <div class="btn-group btn-group-sm">
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Idproject }, new { @class = "btn btn-outline-primary" })
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Idproject }, new { @class = "btn btn-outline-danger" })
+                    </div>
                 </td>
             </tr>
         }
     </tbody>
 </table>
 <nav>
-    <ul class="pagination">
-        @for (int i = Model.FromPager; i <= Model.ToPager; i++)
-        {
-            var linkText = @i.ToString();
-            if (i != 1 && i == Model.FromPager)
+    <div class="d-sm-flex">
+        <ul class="pagination flex-grow-1">
+            @for (int i = Model.FromPager; i <= Model.ToPager; i++)
             {
-                linkText = "«";
-            }
-            else if (i != Model.LastPage && i == Model.ToPager)
-            {
-                linkText = "»";
-            }
+                var linkText = @i.ToString();
+                if (i != 1 && i == Model.FromPager)
+                {
+                    linkText = "«";
+                }
+                else if (i != Model.LastPage && i == Model.ToPager)
+                {
+                    linkText = "»";
+                }
 
-            var linkClass = "page-item";
-            if (i == Model.Page)
-            {
-                linkClass = "page-item active";
+                var linkClass = "page-item";
+                if (i == Model.Page)
+                {
+                    linkClass = "page-item active";
+                }
+                <li class="@linkClass">
+                    <a asp-action="AdminSearch"
+                       asp-route-q="@Model.Q"
+                       asp-route-filter="@Model.Filter"
+                       asp-route-page="@i"
+                       asp-route-size="@Model.Size"
+                       class="page-link">@linkText</a>
+                </li>
             }
-            <li class="@linkClass">
-                <a asp-action="AdminSearch"
-                   asp-route-q="@Model.Q"
-                   asp-route-orderBy="@Model.OrderBy"
-                   asp-route-page="@i"
-                   asp-route-size="@Model.Size"
-                   class="page-link">@linkText</a>
-            </li>
-        }
-    </ul>
+        </ul>
+
+        <div class="flex-right">
+            <a asp-action="Create" class="btn btn-primary float-right">+</a>
+        </div>
+    </div>
 </nav>

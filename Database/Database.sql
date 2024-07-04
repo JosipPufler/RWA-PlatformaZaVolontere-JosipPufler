@@ -9,13 +9,13 @@ CREATE TABLE Log(
 -- 1-to-n Role
 CREATE TABLE Role(
 	IDRole int primary key identity(1, 1),
-	Name nvarchar(50)
+	Name nvarchar(50) not null unique
 );
 
 --1-to-n Skill set
 CREATE TABLE SkillSet(
 	IDSkillSet int primary key identity(1, 1),
-	Name nvarchar(50)
+	Name nvarchar(50) not null unique
 );
 
 --User
@@ -35,7 +35,7 @@ CREATE TABLE [dbo].[User](
 --1-to-n Project type
 CREATE TABLE ProjectType(
 	IDProjectType int primary key identity(1, 1),
-	Name nvarchar(25) not null
+	Name nvarchar(25) not null unique
 );
 
 --Primary - Project
@@ -43,8 +43,8 @@ CREATE TABLE Project(
 	IDProject int primary key identity(1, 1),
 	Title nvarchar(50) not null unique,
 	Description nvarchar(500) not null,
-	PublishDate datetime not null,
-	StartDate datetime not null,
+	PublishDate datetime2 not null,
+	StartDate datetime2 not null,
 	EndDate date,
 	TypeID int foreign key references ProjectType(IDProjectType) not null
 );

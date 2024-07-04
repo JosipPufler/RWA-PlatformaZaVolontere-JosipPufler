@@ -30,7 +30,7 @@ namespace WebApp.Models.ViewModels
         [Required(ErrorMessage = "At least 1 skill set is mandatory")]
         public IEnumerable<int> SkillSets { get; set; } = new List<int>();
 
-        [Display(Name = "Project type id")]
+        [Display(Name = "Project type")]
         [Required(ErrorMessage = "A project has to have a type")]
         public int ProjectTypeId { get; set; }
 

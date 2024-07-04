@@ -117,11 +117,12 @@ namespace RWA.BL.Repositories
 
         public BlProject? Update(BlProject project)
         {
+
+            var projectToUpdate = _context.Projects.Include("ProjectSkillSets")
+                .Include("ProjectSkillSets.SkillSet")
+                .Include("Type").FirstOrDefault(x => x.Idproject == project.Idproject);
             try
             {
-                var projectToUpdate = _context.Projects.Include("ProjectSkillSets")
-                    .Include("ProjectSkillSets.SkillSet")
-                    .Include("Type").FirstOrDefault(x => x.Idproject == project.Idproject);
                 if (projectToUpdate == null)
                 {
                     return null;
@@ -138,6 +139,7 @@ namespace RWA.BL.Repositories
                     });
                 }
                 _context.SaveChanges();
+                project.PublishDate = projectToUpdate.PublishDate;
                 _context.Entry(projectToUpdate).State = EntityState.Detached;
                 projectToUpdate = _mapper.Map<Project>(project);
                 _context.Update(projectToUpdate);
@@ -153,6 +155,7 @@ namespace RWA.BL.Repositories
             }
             catch (Exception)
             {
+                _context.Entry(projectToUpdate).State = EntityState.Detached;
                 _logger.CreateLog(new BlLog()
                 {
                     Level = 1,

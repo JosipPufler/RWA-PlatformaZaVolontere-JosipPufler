@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RWA.BL.BLModels;
 using RWA.BL.Repositories;
@@ -17,24 +18,28 @@ namespace WebApp.Controllers
             _projectTypeRepo = projectTypeRepo;
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: ProjectTypeController
         public ActionResult Index()
         {
             return View(_mapper.Map<IEnumerable<ProjectTypeVM>>(_projectTypeRepo.GetAll()));
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: ProjectTypeController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: ProjectTypeController/Create
         public ActionResult Create()
         {
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
         // POST: ProjectTypeController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -51,18 +56,24 @@ namespace WebApp.Controllers
                 _projectTypeRepo.Add(_mapper.Map<BlProjectType>(projectType));
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
+                if (e.InnerException != null && e.InnerException.Message.StartsWith("Violation of UNIQUE KEY constraint "))
+                {
+                    ModelState.AddModelError(nameof(ProjectTypeVM.Name), "That project type already exists");
+                }
                 return View();
             }
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: ProjectTypeController/Edit/5
         public ActionResult Edit(int id)
         {
             return View(_mapper.Map<ProjectTypeVM>(_projectTypeRepo.Get(id)));
         }
 
+        [Authorize(Roles = "Admin")]
         // POST: ProjectTypeController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -74,18 +85,24 @@ namespace WebApp.Controllers
                 _projectTypeRepo.Update(_mapper.Map<BlProjectType>(projectType));
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                if (e.InnerException != null && e.InnerException.Message.StartsWith("Violation of UNIQUE KEY constraint "))
+                {
+                    ModelState.AddModelError(nameof(SkillSetVM.Name), "That project type already exists");
+                }
+                return View(_mapper.Map<ProjectTypeVM>(_projectTypeRepo.Get(id)));
             }
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: ProjectTypeController/Delete/5
         public ActionResult Delete(int id)
         {
             return View(_mapper.Map<ProjectTypeVM>(_projectTypeRepo.Get(id)));
         }
 
+        [Authorize(Roles = "Admin")]
         // POST: ProjectTypeController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]

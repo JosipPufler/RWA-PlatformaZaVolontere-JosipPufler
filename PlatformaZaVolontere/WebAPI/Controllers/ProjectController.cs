@@ -93,6 +93,10 @@ namespace RestApi.Controllers
                 {
                     return BadRequest(ModelState);
                 }
+                if (value.SkillSets.Count() == 0)
+                {
+                    return BadRequest("At least 1 skill set is required");
+                }
 
                 var newProject = _projectRepo.Add(_mapper.Map<BlProject>(value));
 
@@ -102,6 +106,14 @@ namespace RestApi.Controllers
             }
             catch (Exception ex)
             {
+                if (ex.InnerException != null && ex.InnerException.Message.StartsWith(@"The INSERT statement conflicted with the FOREIGN KEY constraint") && ex.InnerException.Message.Contains("FK__Project__TypeID__47DBAE45"))
+                {
+                    return BadRequest("Invalid project type id");
+                }
+                if (ex.InnerException != null && ex.InnerException.Message.StartsWith(@"The INSERT statement conflicted with the FOREIGN KEY constraint") && ex.InnerException.Message.Contains("FK__ProjectSk__Skill__4BAC3F29"))
+                {
+                    return BadRequest("Invalid skill set id");
+                }
                 return StatusCode(500, ex.Message);
             }
         }
@@ -129,9 +141,17 @@ namespace RestApi.Controllers
 
                 return Ok(value);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest();
+                if (ex.InnerException != null && ex.InnerException.Message.StartsWith(@"The INSERT statement conflicted with the FOREIGN KEY constraint") && ex.InnerException.Message.Contains("FK__Project__TypeID__47DBAE45"))
+                {
+                    return BadRequest("Invalid project type id");
+                }
+                if (ex.InnerException != null && ex.InnerException.Message.StartsWith(@"The INSERT statement conflicted with the FOREIGN KEY constraint") && ex.InnerException.Message.Contains("FK__ProjectSk__Skill__4BAC3F29"))
+                {
+                    return BadRequest("Invalid skill set id");
+                }
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -151,9 +171,9 @@ namespace RestApi.Controllers
 
                 return Ok(resultDto);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest();
+                return StatusCode(500, ex.Message);
             }
         }
     }

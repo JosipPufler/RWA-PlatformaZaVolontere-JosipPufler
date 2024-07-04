@@ -7,6 +7,8 @@ using RWA.BL.BLModels;
 using RWA.BL.Repositories;
 using System.Security.Claims;
 using WebApp.Models.ViewModels;
+using WebApp.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
 {
@@ -37,7 +39,7 @@ namespace WebApp.Controllers
                     new Claim("Id", user.Iduser.ToString()),
                     new Claim(ClaimTypes.Name, user.Username),
                     new Claim(ClaimTypes.Role, user.Role.Name)
-            };
+                };
 
                 var claimsIdentity = new ClaimsIdentity(
                     claims,
@@ -56,6 +58,10 @@ namespace WebApp.Controllers
                     return RedirectToAction("AdminSearch", "Project");
                 else
                     return RedirectToAction("Search", "Project");
+            }
+            else
+            {
+                ModelState.AddModelError(nameof(UserLoginVM.Password), "Incorrect credentials");
             }
             return View();
         }
@@ -97,6 +103,7 @@ namespace WebApp.Controllers
             return RedirectToAction(nameof(Login));
         }
 
+        [Authorize(Roles = "Admin, Volunteer")]
         public ActionResult Logout()
         {
             Task.Run(async () =>
@@ -106,5 +113,23 @@ namespace WebApp.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        [Authorize(Roles = "Admin, Volunteer")]
+        [HttpPut]
+        public ActionResult ChangePassword([FromBody] ChangePasswordModel changePasswordModel)
+        {
+            if (_userRepo.ChangePassword(changePasswordModel.UserName, changePasswordModel.Password, changePasswordModel.NewPassword)) {
+                return Ok();
+            }
+            else
+            {
+                return StatusCode(500);
+            }
+        }
+
+        /*public ActionResult Forbidden()
+        {
+            return View();
+        }*/
     }
 }

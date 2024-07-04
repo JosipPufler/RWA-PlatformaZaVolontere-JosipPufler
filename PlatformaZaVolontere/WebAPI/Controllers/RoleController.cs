@@ -66,7 +66,7 @@ namespace RestApi.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-
+                value.Idrole = 0;
                 var newRole = _roleRepo.Add(_mapper.Map<BlRole>(value)); 
 
                 value.Idrole = newRole.Idrole;

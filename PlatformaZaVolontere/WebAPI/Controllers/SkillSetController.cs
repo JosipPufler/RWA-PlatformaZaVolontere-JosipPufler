@@ -68,6 +68,7 @@ namespace RestApi.Controllers
                 {
                     return BadRequest(ModelState);
                 }
+                value.IdskillSet = 0;
                 var newSkill = _skillSetRepo.Add(_mapper.Map<BlSkillSet>(value));
                 value.IdskillSet = newSkill.IdskillSet;
 

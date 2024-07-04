@@ -66,6 +66,7 @@ namespace RestApi.Controllers
                 {
                     return BadRequest(ModelState);
                 }
+                value.IdprojectType = 0;
                 var newType = _projectTypeRepo.Add(_mapper.Map<BlProjectType>(value));
                 
                 value.IdprojectType = newType.IdprojectType;

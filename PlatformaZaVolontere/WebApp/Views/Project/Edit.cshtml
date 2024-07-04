@@ -5,52 +5,65 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>Edit project</h1>
 
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-12">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
+            <div class="form-group col-md-4 mb-2">
+                <label asp-for="Title" class="control-labe fs-5"></label>
+                <input asp-for="Title" class="form-control form-control-lg" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EndDate" class="control-label"></label>
-                <input asp-for="EndDate" class="form-control" />
-                <span asp-validation-for="EndDate" class="text-danger"></span>
+            <div class="row mb-2">
+                <div class="form-group col-md-8">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label asp-for="StartDate" class="control-label"></label>
+                        <input asp-for="StartDate" class="form-control" />
+                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                    </div>
+                    <div    >
+                        <label asp-for="EndDate" class="control-label"></label>
+                        <div class="input-group">
+                            <input asp-for="EndDate" class="form-control" />
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" onclick="Clear()" type="button">Clear</button>
+                            </div>
+                            <span asp-validation-for="EndDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label asp-for="ProjectTypeId" class="control-label"></label>
-                <select asp-for="ProjectTypeId" asp-items="@ViewBag.TypeSelect" class="form-select">
-                    <option>(select project type)</option>
-                </select>
-                <span asp-validation-for="ProjectTypeId" class="text-danger"></span>
-            </div>
+            <div class="row">
+                <div class="form-group col-md-4 mb-4">
+                    <label asp-for="ProjectTypeId" class="control-label"></label>
+                    <select asp-for="ProjectTypeId" asp-items="@ViewBag.TypeSelect" class="form-select">
+                        <option>(select project type)</option>
+                    </select>
+                    <span asp-validation-for="ProjectTypeId" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="SkillSets" class="control-label"></label>
-                <select asp-for="SkillSets" asp-items="ViewBag.SkillSetSelect" class="form-select" multiple="multiple"></select>
-                <span asp-validation-for="SkillSets" class="text-danger"></span>
+                <div class="form-group col-md-8">
+                    <label asp-for="SkillSets" class="control-label"></label>
+                    <select asp-for="SkillSets" asp-items="ViewBag.SkillSetSelect" class="js-example-basic-multiple js-states form-control" multiple="multiple"></select>
+                    <span asp-validation-for="SkillSets" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
+            <div class="form-group d-flex justify-content-end btn-group btn-group-sm">
                 <input type="submit" value="Save" class="btn btn-primary" />
                 <a asp-action="AdminSearch" class="btn btn-outline-primary">Back to List</a>
                 @Html.ActionLink("Delete", "Delete", new { id = Model.Idproject }, new { @class = "btn btn-outline-danger" })
             </div>
+
+
         </form>
     </div>
 </div>
@@ -59,4 +72,12 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        $('#SkillSets').select2();
+        function Clear() {
+            $('#EndDate').val('')
+                .attr('type', 'text')
+                .attr('type', 'date');
+        }
+    </script>
 }

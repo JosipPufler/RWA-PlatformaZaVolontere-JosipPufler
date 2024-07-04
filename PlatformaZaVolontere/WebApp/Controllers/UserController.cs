@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using RWA.BL.BLModels;
@@ -22,6 +23,7 @@ namespace WebApp.Controllers
             _roleRepo = roleRepo;
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: UserController
         public ActionResult Index()
         {
@@ -29,12 +31,7 @@ namespace WebApp.Controllers
             return View(_mapper.Map<IEnumerable<UserVM>>(_userRepo.GetAll()));
         }
 
-        // GET: UserController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
+        [Authorize(Roles = "Admin")]
         // GET: UserController/Create
         public ActionResult Create()
         {
@@ -44,6 +41,7 @@ namespace WebApp.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
         // POST: UserController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -75,6 +73,7 @@ namespace WebApp.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: UserController/Edit/5
         public ActionResult Edit(int id)
         {
@@ -91,6 +90,7 @@ namespace WebApp.Controllers
             return View(_mapper.Map<UserVM>(_userRepo.Get(id)));
         }
 
+        [Authorize(Roles = "Admin")]
         // POST: UserController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -115,6 +115,7 @@ namespace WebApp.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin, Volunteer")]
         public ActionResult Profile(int id, string returnUrl)
         {
             var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
@@ -128,6 +129,7 @@ namespace WebApp.Controllers
             return View(_mapper.Map<UserVM>(_userRepo.Get(id)));
         }
 
+        [Authorize(Roles = "Admin, Volunteer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Profile(int id, UserVM user, string returnUrl)
@@ -158,6 +160,7 @@ namespace WebApp.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin, Volunteer")]
         public JsonResult GetProfileData(int id)
         {
             var user = _userRepo.Get(id);
@@ -172,6 +175,7 @@ namespace WebApp.Controllers
             return json;
         }
 
+        [Authorize(Roles = "Admin, Volunteer")]
         [HttpPut]
         public ActionResult SetProfileData(int id, [FromBody] UserVM userVm)
         {
@@ -181,6 +185,7 @@ namespace WebApp.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: UserController/Delete/5
         public ActionResult Delete(int id)
         {
@@ -188,6 +193,7 @@ namespace WebApp.Controllers
             return View(_mapper.Map<UserVM>(_userRepo.Get(id)));
         }
 
+        [Authorize(Roles = "Admin")]
         // POST: UserController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]

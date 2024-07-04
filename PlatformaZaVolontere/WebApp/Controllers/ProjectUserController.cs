@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RWA.BL.Repositories;
 using WebApp.Models.ViewModels;
@@ -15,6 +16,7 @@ namespace WebApp.Controllers
             _projectUserRepo = projectUserRepo;
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             return View(_mapper.Map<IEnumerable<ProjectUserVM>>(_projectUserRepo.GetAll()));

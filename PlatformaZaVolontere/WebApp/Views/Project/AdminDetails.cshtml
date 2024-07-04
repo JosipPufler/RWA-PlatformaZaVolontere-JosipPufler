@@ -2,70 +2,78 @@
 @model ProjectVM
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "AdminDetails";
     var skillSetList = ViewBag.SkillSet;
 }
 
-<h3>@Html.DisplayFor(model => model.Title)</h3>
-<div>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.PublishDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.PublishDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.EndDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.EndDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ProjectTypeName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ProjectTypeName)
-        </dd>
-
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.SkillSets)
-        </dt>
-        <dd class="col-sm-10">
-            @foreach (var skillSet in Model.SkillSets)
-            {
-                <div>
-                    @Html.DisplayFor(modelItem => (skillSetList as List<SkillSetVM>).Find(x => x.IdskillSet == skillSet).Name)
-                </div>
-            }
-        </dd>
-        <dt class="col-sm-2">
-            Volunteers
-        </dt>
-        <dd class="col-sm-10">
-            @foreach (string user in ViewBag.RelatedUsers)
-            {
-                <div>
-                    @Html.DisplayFor(modelItem => user)
-                </div>
-            }
-        </dd>
-    </dl>
-
-    <form>
-        <a asp-action="AdminSearch" class="btn btn-outline-primary">Back to List</a>
-    </form>
+<div class="d-inline-flex align-middle">
+    <h3>@Html.DisplayFor(model => model.Title)  </h3>
+    <div class="align-self-center ms-2">
+        <h5>- @Html.DisplayFor(model => model.ProjectTypeName)</h5>
+    </div>
 </div>
+
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <p class="border-dark border-bottom pb-2" style="text-align: justify;">
+            @Html.DisplayFor(model => model.Description)
+        </p>
+        <form>
+            <a asp-action="AdminSearch" class="btn btn-outline-primary">Back to List</a>
+        </form>
+    </div>
+
+    <div class="col-md-4 border-start border-dark">
+        <dl class="row">
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.PublishDate)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.PublishDate)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.StartDate)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.StartDate)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.EndDate)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.EndDate)
+            </dd>
+        </dl>
+        <hr />
+
+        <dt class="col-sm-2">
+            <label asp-for="SkillSets" class="control-label text-bold"></label>
+        </dt>
+        <dd class="col-sm-10">
+            <select asp-for="SkillSets" asp-items="ViewBag.SkillSetSelect" class="js-example-basic-multiple js-states form-control" multiple="multiple"></select>
+        </dd>
+        <hr />
+        <div class="col-md-12 mt-3 border-dark border-bottom pb-2">
+            <dt class="col-sm-2">
+                Volunteers
+            </dt>
+            <dd class="col-sm-10">
+                @foreach (string user in ViewBag.RelatedUsers)
+                {
+                    <div>
+                        @Html.DisplayFor(modelItem => user)
+                    </div>
+                }
+            </dd>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $('#SkillSets').select2({
+            disabled: true
+        });
+    </script>
+}

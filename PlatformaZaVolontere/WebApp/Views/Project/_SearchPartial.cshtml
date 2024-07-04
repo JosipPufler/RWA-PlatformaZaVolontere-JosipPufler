@@ -7,8 +7,7 @@
     var projectTypes = ViewBag.ProjectTypes;
 }
 
-
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
             <th>
@@ -32,19 +31,28 @@
         @foreach (var item in Model.Projects)
         {
             <tr>
-                <td>
+                <td class="align-content-center">
                     @Html.ActionLink(item.Title, "Details", new { id = item.Idproject }, new { @class = "" })
                 </td>
-                <td>
+                <td class="align-content-top" style="max-width: 500px; max-height: 150px; overflow: hidden; text-align: justify;">
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
-                <td>
+                <td class="align-content-center">
                     @Html.DisplayFor(modelItem => item.StartDate)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EndDate)
-                </td>
-                <td>
+                @if (!string.IsNullOrEmpty(item.EndDate.ToString()))
+                {
+                    <td class="align-content-center">
+                        @Html.DisplayFor(modelItem => item.EndDate)
+                    </td>
+                }
+                else
+                {
+                    <td class="align-content-center">
+                        N/A
+                    </td>
+                }
+                <td class="align-content-center">
                     <h5><span class="badge bg-primary">@item.ProjectTypeName</span></h5>
                 </td>
             </tr>
@@ -73,7 +81,7 @@
             <li class="@linkClass">
                 <a asp-action="Search"
                    asp-route-q="@Model.Q"
-                   asp-route-orderBy="@Model.OrderBy"
+                   asp-route-filter="@Model.Filter"
                    asp-route-page="@i"
                    asp-route-size="@Model.Size"
                    class="page-link">@linkText</a>

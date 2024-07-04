@@ -8,18 +8,15 @@
 }
 
 <h1>List of Projects</h1>
-<a asp-action="Create" class="btn btn-outline-primary">Create New</a>
 
 <form asp-action="AdminSearch" method="GET">
-    <div class="row">
-        <div class="col-8">
-            <input asp-for="Q" class="form-control" placeholder="Search projects" />
+    <div class="row align-items-center">
+        <div class="col-6">
+            <input asp-for="Q" class="form-control form-control-sm" type="text" placeholder="Search projects" />
         </div>
         <div class="col-auto">
             <label class="form-label mt-1">Type:</label>
-        </div>
-        <div class="col-auto">
-            <select asp-for="OrderBy" class="form-select">
+            <select asp-for="Filter" class="form-select">
                 <option value="0">(default)</option>
                 @foreach (ProjectTypeVM type in projectTypes)
                 {
@@ -28,6 +25,9 @@
             </select>
         </div>
         <div class="col-auto">
+            <label class="form-label mt-1">
+                Page length:
+            </label>
             <select asp-for="Size" class="form-select">
                 <option>3</option>
                 <option>5</option>
@@ -41,12 +41,16 @@
         </div>
     </div>
 </form>
-<div id="searchPartialPlaceholder">
+<div id="searchPartialPlaceholder" class="row align-items-center mt-2">
     <partial name="_AdminSearchPartial" />
 </div>
 
 @section Scripts {
     <script>
+        $('#Size').select2({
+            minimumResultsForSearch: Infinity
+        });
+        $('#Filter').select2();
         $("body").on("click", "a.page-link", function (e) {
             e.preventDefault();
 

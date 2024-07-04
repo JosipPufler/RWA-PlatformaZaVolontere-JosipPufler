@@ -3,32 +3,32 @@
     Layout = "_GuestLayout";
 }
 
-<h1>Login</h1>
-
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Login">
+<div class="vh-100">
+    <div class="row h-75 align-items-center justify-content-center">
+        <form asp-action="Login" class="col-md-5 rounded-3" style="background-color: lavenderblush">
+            <h1>Login</h1>
+            <hr />
             <div class="form-group">
                 <label asp-for="Username" class="control-label"></label>
-                <input asp-for="Username" class="form-control" />
+                <input asp-for="Username" class="form-control" placeholder="Username" />
                 <span asp-validation-for="Username" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
+                <input asp-for="Password" type="password" class="form-control" placeholder="Password" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
-            <div>
-                <a asp-action="Register" class="nav-link">Register</a>
+            <div class="d-inline-flex align-items-center">
+                Dont have an account?<a asp-action="Register" class="nav-link">Register</a>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Login" class="btn btn-primary mt-3" />
+            <div class="form-group mb-2">
+                <input type="submit" value="Login" class="btn btn-primary" />
             </div>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         </form>
     </div>
 </div>
+
 
 @section Scripts {
     @{

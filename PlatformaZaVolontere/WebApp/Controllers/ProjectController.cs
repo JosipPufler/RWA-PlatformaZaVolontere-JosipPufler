@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using RWA.BL.BLModels;
 using RWA.BL.Repositories;
 using System.Security.Claims;
@@ -26,13 +25,15 @@ namespace WebApp.Controllers
             _configuration = configuration;
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult AdminSearch(SearchVM searchVm)
         {
             PrepareSearch(searchVm);
 
             return View(searchVm);
         }
-        
+
+        [Authorize(Roles = "Admin")]
         public ActionResult AdminSearchPartial(SearchVM searchVm)
         {
             PrepareSearch(searchVm);
@@ -40,6 +41,7 @@ namespace WebApp.Controllers
             return PartialView("_AdminSearchPartial", searchVm);
         }
 
+        [Authorize(Roles = "Admin, Volunteer")]
         public ActionResult Search(SearchVM searchVm)
         {
             try
@@ -53,7 +55,8 @@ namespace WebApp.Controllers
                 throw ex;
             }
         }
-        
+
+        [Authorize(Roles = "Admin, Volunteer")]
         public ActionResult SearchPartial(SearchVM searchVm)
         {
             try
@@ -80,7 +83,7 @@ namespace WebApp.Controllers
 
             IEnumerable<BlProject> projects = _projectRepo.GetAll();
             var filteredCount = 0;
-            int.TryParse(searchVm.OrderBy.ToLower(), out int projectTypeId);
+            int.TryParse(searchVm.Filter.ToLower(), out int projectTypeId);
 
             if (!string.IsNullOrEmpty(searchVm.Q))
             {
@@ -113,21 +116,24 @@ namespace WebApp.Controllers
             Response.Cookies.Append("query", searchVm.Q ?? "", option);
         }
 
+        [Authorize(Roles = "Admin, Volunteer")]
         public ActionResult Details(int id)
         {
-            ViewBag.SkillSet = _mapper.Map<IEnumerable<SkillSetVM>>(_skillSetRepo.GetAll());
+            ViewBag.SkillSetSelect = _skillSetRepo.GetAll().Select(x => new SelectListItem { Text = x.Name, Value = x.IdskillSet.ToString() });
 
             return View(_mapper.Map<ProjectVM>(_projectRepo.Get(id)));
         }
 
+        [Authorize(Roles = "Admin, Volunteer")]
         public ActionResult AdminDetails(int id)
         {
-            ViewBag.SkillSet = _mapper.Map<IEnumerable<SkillSetVM>>(_skillSetRepo.GetAll());
+            ViewBag.SkillSetSelect = _skillSetRepo.GetAll().Select(x => new SelectListItem { Text = x.Name, Value = x.IdskillSet.ToString() });
             ViewBag.RelatedUsers = _projectRepo.GetRelatedUsers(id).Select(x => x.Username);
 
             return View(_mapper.Map<ProjectVM>(_projectRepo.Get(id)));
         }
 
+        [Authorize(Roles = "Admin, Volunteer")]
         public ActionResult JoinProject(int idProject) {
             var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
             int.TryParse(claimsIdentity.FindFirst("Id").Value.ToString(), out int idUser);
@@ -136,6 +142,7 @@ namespace WebApp.Controllers
             return View(_mapper.Map<ProjectVM>(project));
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             ViewBag.SkillSetSelect = _skillSetRepo.GetAll().Select(x => new SelectListItem { Text = x.Name, Value = x.IdskillSet.ToString() });
@@ -143,6 +150,7 @@ namespace WebApp.Controllers
             return View() ;
         }
 
+        [Authorize(Roles = "Admin")]
         // POST: ProjectController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -164,15 +172,16 @@ namespace WebApp.Controllers
                 return View();
             }
         }
-
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id)
         {
             ViewBag.SkillSetSelect = _skillSetRepo.GetAll().Select(x => new SelectListItem { Text = x.Name, Value = x.IdskillSet.ToString() });
             ViewBag.TypeSelect = _projectTypeRepo.GetAll().Select(x => new SelectListItem { Text = x.Name, Value = x.IdprojectType.ToString() });
-
-            return View(_mapper.Map<ProjectVM>(_projectRepo.Get(id)));
+            var test = _mapper.Map<ProjectVM>(_projectRepo.Get(id));
+            return View(test);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, ProjectVM projectVM)
@@ -191,16 +200,18 @@ namespace WebApp.Controllers
                 {
                     ModelState.AddModelError(nameof(ProjectVM.Title), "This project title is taken");
                 }
-                return View();
+                return View(_mapper.Map<ProjectVM>(_projectRepo.Get(id)));
             }
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int id)
         {
             ViewBag.SkillSet = _mapper.Map<IEnumerable<SkillSetVM>>(_skillSetRepo.GetAll());
             return View(_mapper.Map<ProjectVM>(_projectRepo.Get(id)));
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

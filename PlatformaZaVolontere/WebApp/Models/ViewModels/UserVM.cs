@@ -34,7 +34,7 @@ namespace WebApp.Models.ViewModels
         [Display(Name = "Password")]
         public string Password { get; set; } = null!;
 
-        [Display(Name = "Role id")]
+        [Display(Name = "Role")]
         [Required(ErrorMessage = "A role is required")]
         public int RoleId { get; set; }
 
