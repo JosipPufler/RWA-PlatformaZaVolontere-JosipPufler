@@ -71,7 +71,6 @@ namespace WebApp.Controllers
             }
         }
 
-
         private void PrepareSearch(SearchVM searchVm)
         {
             ViewBag.ProjectTypes = _mapper.Map<IEnumerable<ProjectTypeVM>>(_projectTypeRepo.GetAll());
@@ -135,11 +134,25 @@ namespace WebApp.Controllers
 
         [Authorize(Roles = "Admin, Volunteer")]
         public ActionResult JoinProject(int idProject) {
-            var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
-            int.TryParse(claimsIdentity.FindFirst("Id").Value.ToString(), out int idUser);
-            _projectRepo.JoinProject(idUser, idProject);
             var project = _projectRepo.Get(idProject);
             return View(_mapper.Map<ProjectVM>(project));
+        }
+
+        [Authorize(Roles = "Admin, Volunteer")]
+        [ValidateAntiForgeryToken]
+        public ActionResult JoinProjectConfirm(int idProject)
+        {
+            try
+            {
+                var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
+                int.TryParse(claimsIdentity.FindFirst("Id").Value.ToString(), out int idUser);
+                _projectRepo.JoinProject(idUser, idProject);
+                return RedirectToAction(nameof(Search));
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction(nameof(Search));
+            }
         }
 
         [Authorize(Roles = "Admin")]
@@ -172,6 +185,7 @@ namespace WebApp.Controllers
                 return View();
             }
         }
+
         [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id)
         {

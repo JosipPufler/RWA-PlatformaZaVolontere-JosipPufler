@@ -7,8 +7,13 @@ namespace RestApi.AutoMapper
     public class ApiMappingProfile : Profile
     {
         public ApiMappingProfile() {
-            CreateMap<ProjectDto, BlProject>();
-            CreateMap<BlProject, ProjectDto>();
+            //CreateMap<ProjectDto, BlProject>();
+            //CreateMap<BlProject, ProjectDto>();
+            CreateMap<ProjectDto, BlProject>().ForPath(dst => dst.ProjectType, opt => opt.MapFrom(src => new BlProjectType() { 
+                IdprojectType = src.ProjectTypeId,
+                Name = ""
+            })).ForMember(dst => dst.SkillSets, opt => opt.MapFrom(src => src.SkillSetIds.Select(x => new BlSkillSet() { IdskillSet = x, Name="" })));
+            CreateMap<BlProject, ProjectDto>().ForMember(dst => dst.ProjectTypeId, opt => opt.MapFrom(src => src.ProjectType.IdprojectType)).ForMember(dst  => dst.SkillSetIds, opt => opt.MapFrom(src => src.SkillSets.Select(s => s.IdskillSet)));
 
             CreateMap<UserDto, BlUser>();
             CreateMap<BlUser, UserDto>();

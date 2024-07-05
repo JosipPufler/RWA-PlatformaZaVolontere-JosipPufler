@@ -59,7 +59,7 @@ namespace RWA.BL.Repositories
         public IEnumerable<BlProject> SearchByTitle(string searchTerm, int page, int size, int? projectTypeId)
         {
             var projects = _mapper.Map<IEnumerable<BlProject>>(_context.Projects.Include("ProjectSkillSets").Include("ProjectSkillSets.SkillSet").Include("Type").Where(x => x.Title.ToLower().Contains(searchTerm.ToLower())));
-            if (projectTypeId != 0)
+            if (projectTypeId != 0 && projectTypeId != null)
             {
                 projects = projects.Where(x => x.ProjectType.IdprojectType == projectTypeId);
             }

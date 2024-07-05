@@ -129,6 +129,20 @@ namespace WebApp.Controllers
             return View(_mapper.Map<UserVM>(_userRepo.Get(id)));
         }
 
+        [Authorize(Roles = "Admin")]
+        public ActionResult AdminProfile(int id, string returnUrl)
+        {
+            var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
+            int.TryParse(claimsIdentity.FindFirst("Id").Value.ToString(), out int idUser);
+            id = idUser;
+
+            ViewBag.returnUrl = returnUrl;
+            ViewBag.SkillSetSelect = _skillSetRepo.GetAll().Select(x => new SelectListItem { Text = x.Name, Value = x.IdskillSet.ToString() });
+            ViewBag.RoleSelect = _roleRepo.GetAll().Select(x => new SelectListItem { Text = x.Name, Value = x.Idrole.ToString() });
+
+            return View(_mapper.Map<UserVM>(_userRepo.Get(id)));
+        }
+
         [Authorize(Roles = "Admin, Volunteer")]
         [HttpPost]
         [ValidateAntiForgeryToken]

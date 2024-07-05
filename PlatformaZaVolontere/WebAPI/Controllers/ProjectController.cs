@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using RestApi.DTOs;
 using RWA.BL.BLModels;
-using RWA.BL.DALModels;
 using RWA.BL.Repositories;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -62,11 +61,15 @@ namespace RestApi.Controllers
 
 
         [HttpGet("[action]")]
-        public ActionResult<IEnumerable<ProjectDto>> Search(string searchPart)
+        public ActionResult<IEnumerable<ProjectDto>> Search(string? searchPart, int page, int pageSize)
         {
             try
             {
-                var dbProjects = _projectRepo.SearchByTitle(searchPart, 1, _projectRepo.GetAll().Count(), null);
+                if (searchPart == null)
+                {
+                    searchPart = "";
+                }
+                var dbProjects = _projectRepo.SearchByTitle(searchPart.ToLower(), page, pageSize, null);
 
                 if (dbProjects.Count() == 0)
                 {
@@ -93,7 +96,7 @@ namespace RestApi.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-                if (value.SkillSets.Count() == 0)
+                if (value.SkillSetIds.Count() == 0)
                 {
                     return BadRequest("At least 1 skill set is required");
                 }

@@ -75,6 +75,10 @@ namespace RestApi.Controllers
             }
             catch (Exception ex)
             {
+                if (ex.InnerException != null && ex.InnerException.Message.StartsWith("Violation of UNIQUE KEY constraint "))
+                {
+                    return StatusCode(500, "That role already exists");
+                }
                 return StatusCode(500, ex.Message);
             }
         }
@@ -101,6 +105,10 @@ namespace RestApi.Controllers
             }
             catch (Exception ex)
             {
+                if (ex.InnerException != null && ex.InnerException.Message.StartsWith("Violation of UNIQUE KEY constraint "))
+                {
+                    return StatusCode(500, "That role already exists");
+                }
                 return StatusCode(500, ex.Message);
             }
         }
@@ -123,8 +131,7 @@ namespace RestApi.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
-            }
-        
+            }       
         }
     }
 }

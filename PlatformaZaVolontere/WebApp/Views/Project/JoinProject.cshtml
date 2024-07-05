@@ -4,11 +4,14 @@
     Layout = "_UserLayout";
 }
 
-<h1>You have succesfully joined the project: @Model.Title</h1>
+<h1 class="text-center mb-4">Are you sure you want to join the project: @Model.Title</h1>
 
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <a asp-area="" asp-controller="Project" asp-action="Search" class="btn btn-primary">Ok</a>
+    <div class="col-md-12">
+        <form asp-action="JoinProjectConfirm" class="d-flex justify-content-center btn-group mt-3">
+            @Html.ActionLink("Join", "JoinProjectConfirm", "Project", new { idProject = Model.Idproject }, new { @class = "btn btn-outline-primary" })
+            <a asp-action="Search" class="btn btn-outline-danger">Cancle</a>
+        </form>
     </div>
 </div>

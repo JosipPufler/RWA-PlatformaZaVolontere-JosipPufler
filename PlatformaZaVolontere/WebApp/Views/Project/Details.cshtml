@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Details";
+    Layout = "_UserLayout";
     var skillSetList = ViewBag.SkillSet;
 }
 
@@ -21,6 +22,7 @@
         </p>
         <form>
             <a asp-action="Search" class="btn btn-outline-primary">Back to List</a>
+            @Html.ActionLink("Join project", "JoinProject", new { idProject = Model.Idproject }, new { @class = "btn btn-outline-primary" })
         </form>
     </div>
 

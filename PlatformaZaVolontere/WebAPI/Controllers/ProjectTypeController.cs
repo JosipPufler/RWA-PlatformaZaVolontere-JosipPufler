@@ -75,6 +75,10 @@ namespace RestApi.Controllers
             }
             catch (Exception ex)
             {
+                if (ex.InnerException != null && ex.InnerException.Message.StartsWith("Violation of UNIQUE KEY constraint "))
+                {
+                    return BadRequest("That project type already exists");
+                }
                 return StatusCode(500, ex.Message);
             }
         }
@@ -101,6 +105,10 @@ namespace RestApi.Controllers
             }
             catch (Exception ex)
             {
+                if (ex.InnerException != null && ex.InnerException.Message.StartsWith("Violation of UNIQUE KEY constraint "))
+                {
+                    return BadRequest("That project type already exists");
+                }
                 return StatusCode(500, ex.Message);
             }
         }

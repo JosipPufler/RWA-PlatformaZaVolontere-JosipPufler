@@ -1,3 +1,6 @@
+use RWA
+select * from Project
+select * from ProjectSkillSet
 --Log
 CREATE TABLE Log(
 	IDLog int primary key identity(1, 1),
@@ -45,7 +48,7 @@ CREATE TABLE Project(
 	Description nvarchar(500) not null,
 	PublishDate datetime2 not null,
 	StartDate datetime2 not null,
-	EndDate date,
+	EndDate datetime,
 	TypeID int foreign key references ProjectType(IDProjectType) not null
 );
 
