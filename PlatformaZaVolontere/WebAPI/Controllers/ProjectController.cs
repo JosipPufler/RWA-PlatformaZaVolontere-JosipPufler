@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RestApi.DTOs;
 using RWA.BL.BLModels;
+using RWA.BL.DALModels;
 using RWA.BL.Repositories;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860

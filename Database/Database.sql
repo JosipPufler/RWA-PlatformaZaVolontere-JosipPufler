@@ -1,6 +1,3 @@
-use RWA
-select * from Project
-select * from ProjectSkillSet
 --Log
 CREATE TABLE Log(
 	IDLog int primary key identity(1, 1),
